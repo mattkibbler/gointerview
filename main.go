@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"time"
 )
 
 func main() {
@@ -12,16 +13,25 @@ func main() {
 	PrintBlock(PrintBlockOptions{Title: "Welcome to gointerview!!!"})
 
 	var activeCommand Command
+	var lastActiveCommand Command
+
 	activeCommand = StartCommand{}
 
 	for {
+		lastActiveCommand = activeCommand
 		activeCommand.Prompt()
 
 		var err error
 		activeCommand, err = activeCommand.HandleInput(reader)
 		if err != nil {
-			fmt.Println("error handling input:", err)
-			return
+			fmt.Println("")
+			fmt.Println("!!!")
+			fmt.Println("Error:", err)
+			fmt.Println("!!!")
+
+			activeCommand = lastActiveCommand
+			// Pause a moment so that the user can see the error before going back to the last command
+			time.Sleep(time.Second)
 		}
 	}
 }
