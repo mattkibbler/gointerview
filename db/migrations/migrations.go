@@ -8,10 +8,11 @@ import (
 type migrationFunc func(*sql.DB) error
 type migration struct {
 	name          string
-	migrationFunc func(*sql.DB) error
+	migrationFunc migrationFunc
 }
 
 var migrations = []migration{
+	{name: "createQuestionCategoriesTable", migrationFunc: createQuestionCategoriesTable},
 	{name: "createQuestionsTable", migrationFunc: createQuestionsTable},
 	{name: "createAnswersTable", migrationFunc: createAnswersTable},
 }
@@ -73,7 +74,11 @@ func createQuestionsTable(db *sql.DB) error {
 	_, err := db.Exec(`CREATE TABLE IF NOT EXISTS questions (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		question TEXT NOT NULL,
-		answer TEXT NOT NULL
+		answer TEXT NOT NULL,
+		category_id INTEGER,
+		FOREIGN KEY (category_id)
+		REFERENCES question_categories(id)
+		ON DELETE CASCADE
 	)`)
 	return err
 }
@@ -88,6 +93,14 @@ func createAnswersTable(db *sql.DB) error {
 		FOREIGN KEY (question_id)
 		REFERENCES questions(id)
 		ON DELETE CASCADE
+	)`)
+	return err
+}
+
+func createQuestionCategoriesTable(db *sql.DB) error {
+	_, err := db.Exec(`CREATE TABLE IF NOT EXISTS question_categories (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		name VARCHAR(250)
 	)`)
 	return err
 }

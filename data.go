@@ -4,6 +4,11 @@ import (
 	"database/sql"
 )
 
+type QuestionCategory struct {
+	ID   int
+	Name string
+}
+
 type Question struct {
 	ID       int
 	Question string
@@ -20,6 +25,15 @@ type Answer struct {
 func GetRandomQuestion(db *sql.DB) (Question, error) {
 	var question Question
 	err := db.QueryRow(`SELECT id as ID, question as Question, answer as Answer FROM questions ORDER BY RANDOM() LIMIT 1`).Scan(&question.ID, &question.Question, &question.Answer)
+	if err != nil {
+		return question, err
+	}
+	return question, nil
+}
+
+func GetRandomQuestionForCategory(db *sql.DB, categoryId int) (Question, error) {
+	var question Question
+	err := db.QueryRow(`SELECT id as ID, question as Question, answer as Answer FROM questions WHERE category_id = ? ORDER BY RANDOM() LIMIT 1`, categoryId).Scan(&question.ID, &question.Question, &question.Answer)
 	if err != nil {
 		return question, err
 	}
@@ -50,4 +64,28 @@ func GetLastAnswer(db *sql.DB, questionId int) (Answer, error) {
 		return answer, err
 	}
 	return answer, nil
+}
+
+func CreateQuestion(db *sql.DB, question string, answer string, categoryId *int) error {
+	_, err := db.Exec(`INSERT INTO questions (question, answer, category_id) VALUES (?, ?, ?)`, question, answer, categoryId)
+	return err
+}
+
+func CreateQuestionCategory(db *sql.DB, categoryName string) error {
+	_, err := db.Exec(`INSERT INTO question_categories (name) VALUES (?)`, categoryName)
+	return err
+}
+
+func GetQuestionCategories(db *sql.DB) ([]QuestionCategory, error) {
+	rows, err := db.Query(`SELECT id as ID, name as Name FROM question_categories`)
+	if err != nil {
+		return nil, err
+	}
+	questionCategories := []QuestionCategory{}
+	for rows.Next() {
+		questionCategory := QuestionCategory{}
+		rows.Scan(&questionCategory.ID, &questionCategory.Name)
+		questionCategories = append(questionCategories, questionCategory)
+	}
+	return questionCategories, nil
 }
