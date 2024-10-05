@@ -11,6 +11,6 @@ A command line program which prompts the user with random pre-loaded questions a
 With the foundation now in place I will look at tackle the following...
 
 - [x] Add a database to store questions as well as record the user's answers.
-- [ ] Tags/categories to request questions of a particular type.
+- [x] Categories to request questions of a particular type.
 - [ ] Make it look nicer... add fancy colours?
 - [ ] Integrate AI to verify answers and maybe generate new ones on the fly.
