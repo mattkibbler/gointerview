@@ -117,7 +117,9 @@ func (cmd *AskMeQuestionCommand) HandleInput(db *sql.DB, r *bufio.Reader) (Comma
 	}
 
 	PrintBlock(PrintBlockOptions{Title: "You answered", Message: answerInput})
+	time.Sleep(time.Second)
 	PrintBlock(PrintBlockOptions{Title: "The answer should be:", Message: question.Answer})
+	time.Sleep(time.Second)
 
 	lastAnswer, err := GetLastAnswer(db, question.ID)
 	if err != nil {
@@ -125,6 +127,7 @@ func (cmd *AskMeQuestionCommand) HandleInput(db *sql.DB, r *bufio.Reader) (Comma
 	}
 	if lastAnswer.GivenAnswer != "" {
 		PrintBlock(PrintBlockOptions{Title: "You previously answered:", Message: lastAnswer.GivenAnswer})
+		time.Sleep(time.Second)
 	}
 
 	PrintBlock(PrintBlockOptions{Title: "Did you answer correctly this time? Be honest! (y/n)"})
@@ -159,6 +162,8 @@ promptLoop:
 	} else {
 		PrintBlock(PrintBlockOptions{Title: "No worries, you'll do better next time..."})
 	}
+
+	time.Sleep(time.Second)
 
 	return AfterAskMeQuestionCommand{}, nil
 }
