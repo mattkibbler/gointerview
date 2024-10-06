@@ -1,4 +1,4 @@
 build:
 	@go build -o ./bin/gointerview
 run: build;
-	@./bin/gointerview
+	@./bin/gointerview $(FLAGS)
