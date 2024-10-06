@@ -61,9 +61,8 @@ func main() {
 func handleErrorFromCommand(err error, activeCommand *commands.Command, lastActiveCommand *commands.Command) {
 	if err != nil {
 		fmt.Println("")
-		fmt.Println("!!!")
-		fmt.Println("Error:", err)
-		fmt.Println("!!!")
+
+		output.PrintError(fmt.Sprintf("Error: %v", err))
 		if _, ok := err.(apperrors.ErrorRequiringRestart); ok {
 			*activeCommand = commands.StartCommand{}
 		} else {

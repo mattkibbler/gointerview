@@ -24,11 +24,12 @@ func (cmd StartCommand) HandleInput(db *sql.DB, r *bufio.Reader) (Command, error
 	commands := []Command{
 		&AskMeQuestionCommand{},
 		&AddAQuestionCommand{},
-		AddACategoryCommand{},
+		&AddACategoryCommand{},
 	}
 
-	fmt.Println("")
+	fmt.Print("\n")
 
 	PresentCommands(commands)
+	fmt.Print("\n")
 	return SelectCommand(r, commands)
 }

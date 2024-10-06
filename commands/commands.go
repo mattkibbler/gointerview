@@ -8,6 +8,7 @@ import (
 	"strconv"
 
 	"github.com/mattkibbler/gointerview/input"
+	"github.com/mattkibbler/gointerview/output"
 )
 
 type Command interface {
@@ -18,7 +19,7 @@ type Command interface {
 
 func PresentCommands(commands []Command) {
 	for i, cmd := range commands {
-		fmt.Printf("%v. %v\n", i+1, cmd.Name())
+		output.TypewriterPrint(fmt.Sprintf("%v. %v\n", i+1, cmd.Name()))
 	}
 }
 

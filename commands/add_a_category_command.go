@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"database/sql"
 	"fmt"
-	"time"
 
 	"github.com/mattkibbler/gointerview/data"
 	"github.com/mattkibbler/gointerview/input"
@@ -33,8 +32,7 @@ func (cmd AddACategoryCommand) HandleInput(db *sql.DB, r *bufio.Reader) (Command
 	}
 
 	fmt.Println("")
-	fmt.Printf("Category '%v' added\n", categoryName)
-	time.Sleep(time.Second)
+	output.TypewriterPrint(fmt.Sprintf("Category '%v' added\n", categoryName))
 
 	return StartCommand{}, nil
 }

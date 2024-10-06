@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"database/sql"
 	"fmt"
-	"time"
 
 	"github.com/mattkibbler/gointerview/data"
 	"github.com/mattkibbler/gointerview/input"
@@ -23,14 +22,15 @@ func (cmd AddAQuestionCommand) Prompt(db *sql.DB) error {
 }
 
 func (cmd AddAQuestionCommand) HandleInput(db *sql.DB, r *bufio.Reader) (Command, error) {
-	fmt.Println("Enter question text")
-	fmt.Println("")
+	output.TypewriterPrint("Enter question text\n")
+	fmt.Print("\n")
 	questionInput, err := input.ReadUserInput(r)
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println("Enter answer text")
-	fmt.Println("")
+	fmt.Print("\n")
+	output.TypewriterPrint("Enter answer text\n")
+	fmt.Print("\n")
 	answerInput, err := input.ReadUserInput(r)
 	if err != nil {
 		return nil, err
@@ -44,10 +44,11 @@ func (cmd AddAQuestionCommand) HandleInput(db *sql.DB, r *bufio.Reader) (Command
 		return nil, err
 	}
 	if len(questionCategories) > 0 {
+		output.PrintBlock(output.PrintBlockOptions{Title: "Do you want to apply a category to this question?"})
 		var categoryIds = []int{0} // add in 0 as an option, which will be the "no category" option
-		fmt.Println("0. No category")
+		output.TypewriterPrint("0. No category\n")
 		for _, cat := range questionCategories {
-			fmt.Printf("%v. %v\n", cat.ID, cat.Name)
+			output.TypewriterPrint(fmt.Sprintf("%v. %v\n", cat.ID, cat.Name))
 			categoryIds = append(categoryIds, cat.ID)
 		}
 
@@ -68,8 +69,8 @@ func (cmd AddAQuestionCommand) HandleInput(db *sql.DB, r *bufio.Reader) (Command
 	}
 
 	fmt.Println("")
-	fmt.Println("Question added!")
-	time.Sleep(time.Second)
+	output.TypewriterPrint("Question added!")
+	fmt.Println("")
 
 	return StartCommand{}, nil
 }
