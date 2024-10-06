@@ -9,17 +9,12 @@ import (
 	"os"
 	"time"
 
+	"github.com/mattkibbler/gointerview/apperrors"
+	"github.com/mattkibbler/gointerview/commands"
 	"github.com/mattkibbler/gointerview/db/migrations"
+	"github.com/mattkibbler/gointerview/output"
 	_ "github.com/mattn/go-sqlite3"
 )
-
-type errorRequiringRestart struct {
-	Message string
-}
-
-func (err errorRequiringRestart) Error() string {
-	return fmt.Sprintf("error requiring restart: %v", err.Message)
-}
 
 func main() {
 	// Define flags
@@ -40,12 +35,12 @@ func main() {
 
 	reader := bufio.NewReader(os.Stdin)
 
-	PrintBlock(PrintBlockOptions{Title: "Welcome to gointerview!!!"})
+	output.PrintBlock(output.PrintBlockOptions{Title: "Welcome to gointerview!!!"})
 
-	var activeCommand Command
-	var lastActiveCommand Command
+	var activeCommand commands.Command
+	var lastActiveCommand commands.Command
 
-	activeCommand = StartCommand{}
+	activeCommand = commands.StartCommand{}
 
 	for {
 		lastActiveCommand = activeCommand
@@ -63,14 +58,14 @@ func main() {
 	}
 }
 
-func handleErrorFromCommand(err error, activeCommand *Command, lastActiveCommand *Command) {
+func handleErrorFromCommand(err error, activeCommand *commands.Command, lastActiveCommand *commands.Command) {
 	if err != nil {
 		fmt.Println("")
 		fmt.Println("!!!")
 		fmt.Println("Error:", err)
 		fmt.Println("!!!")
-		if _, ok := err.(errorRequiringRestart); ok {
-			*activeCommand = StartCommand{}
+		if _, ok := err.(apperrors.ErrorRequiringRestart); ok {
+			*activeCommand = commands.StartCommand{}
 		} else {
 			*activeCommand = *lastActiveCommand
 		}

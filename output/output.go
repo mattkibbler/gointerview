@@ -1,6 +1,8 @@
-package main
+package output
 
-import "fmt"
+import (
+	"fmt"
+)
 
 const BLUE_TEXT_STYLE = "\033[34m"
 const MAGENTA_BG_STYLE = "\033[45m"
@@ -19,11 +21,5 @@ func PrintBlock(opts PrintBlockOptions) {
 	fmt.Printf("%v# %v%v\n", REVERSED_TEXT_AND_BG_STYLE, opts.Title, RESET_TEXT_STYLE)
 	if opts.Message != "" {
 		fmt.Println(opts.Message)
-	}
-}
-
-func PresentCommands(commands []Command) {
-	for i, cmd := range commands {
-		fmt.Printf("%v. %v\n", i+1, cmd.Name())
 	}
 }
